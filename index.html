@@ -25,7 +25,7 @@
       <div class="flex items-center gap-4 mb-6">
         <img
           class="w-16 h-16 rounded-xl object-contain shadow"
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Emblem_of_Mosque.svg/240px-Emblem_of_Mosque.svg.png"
+          src="https://www.facebook.com/photo.php?fbid=1677113722431916&id=409814015828566&set=a.409816005828367"
           alt="شعار المسجد"
         />
         <div>
@@ -166,14 +166,17 @@
 
       try {
         const res = await fetch(WEB_APP_URL, { method: 'POST', body: params });
-        const json = await res.json().catch(() => ({}));
+      const raw = await res.text();
+      let json = null;
+      try { json = JSON.parse(raw); } catch (_) {}
 
-        if (res.ok && json?.result === 'success') {
+      console.log('STATUS=', res.status, 'RAW=', raw);
+      if (res.ok && (!json || json.result === 'success')) {
           showAlert('success', 'تم الإرسال بنجاح ✅');
           form.reset();
         } else {
-          showAlert('error', 'تعذّر الإرسال: ' + (json?.error || res.status));
-        }
+ const message = (json && (json.error || json.message)) || raw || ('HTTP ' + res.status);
+        showAlert('error', 'تعذّر الإرسال: ' + message);        }
       } catch (err) {
         showAlert('error', 'خطأ في الاتصال بالخادم: ' + err.message);
       } finally {
