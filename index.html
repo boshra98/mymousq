@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>تسجيل الصلاة اليومية | مسجدنا</title>
+  <meta name="description" content="نموذج تسجيل الصلاة اليومية لطلاب المسجد.">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f54c.svg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* خلفية لطيفة بتدرّج */
+    body {
+      background: radial-gradient(1200px 600px at 80% -10%, #eef2ff 10%, transparent 40%),
+                  radial-gradient(1000px 500px at -10% 120%, #ecfeff 10%, transparent 40%),
+                  #f8fafc;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <main class="w-full max-w-xl">
+    <!-- بطاقة -->
+    <div class="relative bg-white/90 backdrop-blur shadow-2xl rounded-3xl p-6 sm:p-8 border border-gray-100">
+      <!-- رأس -->
+      <div class="flex items-center gap-4 mb-6">
+        <img
+          class="w-16 h-16 rounded-xl object-contain shadow"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Emblem_of_Mosque.svg/240px-Emblem_of_Mosque.svg.png"
+          alt="شعار المسجد"
+        />
+        <div>
+          <h1 class="text-2xl font-extrabold text-indigo-800">تسجيل الصلاة اليومية</h1>
+          <p class="text-sm text-gray-500">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيمِ</p>
+        </div>
+      </div>
+
+      <!-- تنبيه نجاح/فشل -->
+      <div id="alert" class="hidden mb-4 rounded-xl border p-3 text-sm"></div>
+
+      <!-- النموذج -->
+      <form id="prayerForm" class="space-y-5">
+        <!-- الاسم -->
+        <div>
+          <label for="name" class="block mb-2 text-gray-700 font-medium">الاسم الكامل <span class="text-red-500">*</span></label>
+          <input
+            id="name" name="name" required
+            class="w-full border border-gray-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            placeholder="أدخل اسمك الثلاثي"
+            autocomplete="name"
+          />
+        </div>
+
+        <!-- الصلوات -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="fajr" class="block mb-1 text-gray-700">الفجر</label>
+            <select id="fajr" name="fajr" class="w-full border border-gray-200 rounded-xl p-2.5" required>
+              <option value="حاضر_مع_سنة">حاضر مع سنة</option>
+              <option value="حاضر_بدون_سنة">حاضر بدون سنة</option>
+              <option value="قضاء">قضاء</option>
+              <option value="لم_يصل">لم يصلّ</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="dhuhr" class="block mb-1 text-gray-700">الظهر</label>
+            <select id="dhuhr" name="dhuhr" class="w-full border border-gray-200 rounded-xl p-2.5" required>
+              <option value="حاضر_مع_سنة">حاضر مع سنة</option>
+              <option value="حاضر_بدون_سنة">حاضر بدون سنة</option>
+              <option value="قضاء">قضاء</option>
+              <option value="لم_يصل">لم يصلّ</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="asr" class="block mb-1 text-gray-700">العصر</label>
+            <select id="asr" name="asr" class="w-full border border-gray-200 rounded-xl p-2.5" required>
+              <option value="حاضر_مع_سنة">حاضر مع سنة</option>
+              <option value="حاضر_بدون_سنة">حاضر بدون سنة</option>
+              <option value="قضاء">قضاء</option>
+              <option value="لم_يصل">لم يصلّ</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="maghrib" class="block mb-1 text-gray-700">المغرب</label>
+            <select id="maghrib" name="maghrib" class="w-full border border-gray-200 rounded-xl p-2.5" required>
+              <option value="حاضر_مع_سنة">حاضر مع سنة</option>
+              <option value="حاضر_بدون_سنة">حاضر بدون سنة</option>
+              <option value="قضاء">قضاء</option>
+              <option value="لم_يصل">لم يصلّ</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="isha" class="block mb-1 text-gray-700">العشاء</label>
+            <select id="isha" name="isha" class="w-full border border-gray-200 rounded-xl p-2.5" required>
+              <option value="حاضر_مع_سنة">حاضر مع سنة</option>
+              <option value="حاضر_بدون_سنة">حاضر بدون سنة</option>
+              <option value="قضاء">قضاء</option>
+              <option value="لم_يصل">لم يصلّ</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- إجراء -->
+        <button
+          id="submitBtn"
+          type="submit"
+          class="w-full inline-flex items-center justify-center gap-2 bg-indigo-600 text-white py-3 rounded-2xl hover:bg-indigo-700 transition disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          <svg id="spinner" class="hidden animate-spin h-5 w-5" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4A4 4 0 008 12H4z"></path>
+          </svg>
+          <span>إرسال</span>
+        </button>
+
+        <!-- ملاحظة خصوصية -->
+        <p class="text-xs text-gray-500 text-center">
+          تُستخدم هذه البيانات لأغراض تربوية داخلية في المسجد فقط.
+        </p>
+      </form>
+    </div>
+
+    <!-- تذييل بسيط -->
+    <p class="text-center text-xs text-gray-400 mt-4">
+      مشروع المسجد — بإشراف الإدارة التعليمية
+    </p>
+  </main>
+
+  <script>
+    // ضع هنا رابط الويب آب المنشور الذي ينتهي بـ /exec
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzSeTMCTiRZJePjOB1E4ylvfolssBvcu-YiTPmnSHxzm40xEtYdJQtVVggY3Alvz_pEbQ/exec';
+
+    const form = document.getElementById('prayerForm');
+    const alertBox = document.getElementById('alert');
+    const submitBtn = document.getElementById('submitBtn');
+    const spinner = document.getElementById('spinner');
+
+    function showAlert(type, msg) {
+      // type: 'success' | 'error' | 'info'
+      const styles = {
+        success: 'border-green-200 bg-green-50 text-green-700',
+        error: 'border-red-200 bg-red-50 text-red-700',
+        info: 'border-blue-200 bg-blue-50 text-blue-700',
+      };
+      alertBox.className = `mb-4 rounded-xl border p-3 text-sm ${styles[type] || styles.info}`;
+      alertBox.textContent = msg;
+      alertBox.classList.remove('hidden');
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      alertBox.classList.add('hidden');
+      submitBtn.disabled = true; spinner.classList.remove('hidden');
+
+      // نجعل الطلب بسيطًا (بدون هيدرات) لتجنّب preflight
+      const params = new URLSearchParams();
+      params.append('name', document.getElementById('name').value.trim());
+      params.append('fajr', document.getElementById('fajr').value);
+      params.append('dhuhr', document.getElementById('dhuhr').value);
+      params.append('asr', document.getElementById('asr').value);
+      params.append('maghrib', document.getElementById('maghrib').value);
+      params.append('isha', document.getElementById('isha').value);
+
+      try {
+        const res = await fetch(WEB_APP_URL, { method: 'POST', body: params });
+        const json = await res.json().catch(() => ({}));
+
+        if (res.ok && json?.result === 'success') {
+          showAlert('success', 'تم الإرسال بنجاح ✅');
+          form.reset();
+        } else {
+          showAlert('error', 'تعذّر الإرسال: ' + (json?.error || res.status));
+        }
+      } catch (err) {
+        showAlert('error', 'خطأ في الاتصال بالخادم: ' + err.message);
+      } finally {
+        submitBtn.disabled = false; spinner.classList.add('hidden');
+      }
+    });
+  </script>
+</body>
+</html>
