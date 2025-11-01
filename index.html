@@ -8,15 +8,14 @@
   <link rel="icon" href="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f54c.svg">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body {
+    body{
       background: radial-gradient(1200px 600px at 80% -10%, #eef2ff 10%, transparent 40%),
                   radial-gradient(1000px 500px at -10% 120%, #ecfeff 10%, transparent 40%),
                   #f8fafc;
     }
-    .tab-active { @apply bg-indigo-600 text-white; }
-    .tab { @apply px-4 py-2 rounded-xl text-sm font-medium border border-indigo-200 bg-white text-indigo-700 hover:bg-indigo-50 transition; }
-    .section { display: none; }
-    .section.active { display: block; }
+    /* إخفاء/إظهار الأقسام */
+    .section{ display:none; }
+    .section.active{ display:block; }
   </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
@@ -34,8 +33,12 @@
 
       <!-- Tabs -->
       <div class="mb-5 flex gap-2">
-        <button type="button" id="tabPrayer" class="tab tab-active" data-target="prayer">قسم الصلاة</button>
-        <button type="button" id="tabDhikr"  class="tab" data-target="dhikr">قسم التسبيح</button>
+        <button type="button" id="tabPrayer"
+                class="px-4 py-2 rounded-xl text-sm font-medium border border-indigo-200 bg-indigo-600 text-white transition"
+                data-target="prayer">قسم الصلاة</button>
+        <button type="button" id="tabDhikr"
+                class="px-4 py-2 rounded-xl text-sm font-medium border border-indigo-200 bg-white text-indigo-700 hover:bg-indigo-50 transition"
+                data-target="dhikr">قسم التسبيح</button>
       </div>
 
       <!-- Alert -->
@@ -45,6 +48,7 @@
       <form id="dailyForm" class="space-y-5">
         <!-- common -->
         <input type="hidden" id="section" name="section" value="prayer" />
+
         <div>
           <label for="name" class="block mb-2 text-gray-700 font-medium">الاسم الكامل <span class="text-red-500">*</span></label>
           <input id="name" name="name" required
@@ -55,7 +59,6 @@
         <!-- PRAYER SECTION -->
         <section id="section-prayer" class="section active space-y-4">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <!-- فرض -->
             <div>
               <label for="fajr" class="block mb-1 text-gray-700">الفجر</label>
               <select id="fajr" name="fajr" class="w-full border border-gray-200 rounded-xl p-2.5">
@@ -183,133 +186,136 @@
     <p class="text-center text-xs text-gray-400 mt-4">مشروع المسجد — بإشراف الإدارة التعليمية</p>
   </main>
 
-  <script>
-    // ضع هنا رابط الويب آب الذي ينتهي بـ /exec
+  <!-- سكربت موحّد ونظيف -->
+  <script type="module">
+    // رابط الويب آب (ينتهي بـ /exec)
     const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzSeTMCTiRZJePjOB1E4ylvfolssBvcu-YiTPmnSHxzm40xEtYdJQtVVggY3Alvz_pEbQ/exec';
 
-    // Tabs logic
-    const tabPrayer = document.getElementById('tabPrayer');
-    const tabDhikr  = document.getElementById('tabDhikr');
-    const sectionInput = document.getElementById('section');
+    // عناصر DOM (تعريف مرة واحدة)
+    const form          = document.getElementById('dailyForm');
+    const alertBox      = document.getElementById('alert');
+    const submitBtn     = document.getElementById('submitBtn');
+    const spinner       = document.getElementById('spinner');
+    const sectionInput  = document.getElementById('section');
+
+    const tabPrayer     = document.getElementById('tabPrayer');
+    const tabDhikr      = document.getElementById('tabDhikr');
     const sectionPrayer = document.getElementById('section-prayer');
     const sectionDhikr  = document.getElementById('section-dhikr');
 
+    // مساعد تنبيهات
+    function showAlert(type, msg) {
+      const styles = {
+        success: 'border-green-200 bg-green-50 text-green-700',
+        error:   'border-red-200 bg-red-50 text-red-700',
+        info:    'border-blue-200 bg-blue-50 text-blue-700',
+      };
+      alertBox.className = `mb-4 rounded-xl border p-3 text-sm ${styles[type] || styles.info}`;
+      alertBox.textContent = msg;
+      alertBox.classList.remove('hidden');
+    }
+
+    // تبديل التبويبات (مع تبديل فئات Tailwind بدلاً من @apply)
     function setActive(tab) {
       const isPrayer = tab.dataset.target === 'prayer';
       sectionInput.value = isPrayer ? 'prayer' : 'dhikr';
 
-      // tabs UI
-      tabPrayer.classList.toggle('tab-active', isPrayer);
-      tabDhikr.classList.toggle('tab-active', !isPrayer);
+      // تبديل مظهر الأزرار
+      if (isPrayer) {
+        tabPrayer.classList.remove('bg-white','text-indigo-700','hover:bg-indigo-50');
+        tabPrayer.classList.add('bg-indigo-600','text-white');
 
-      // sections
+        tabDhikr.classList.remove('bg-indigo-600','text-white');
+        tabDhikr.classList.add('bg-white','text-indigo-700','hover:bg-indigo-50');
+      } else {
+        tabDhikr.classList.remove('bg-white','text-indigo-700','hover:bg-indigo-50');
+        tabDhikr.classList.add('bg-indigo-600','text-white');
+
+        tabPrayer.classList.remove('bg-indigo-600','text-white');
+        tabPrayer.classList.add('bg-white','text-indigo-700','hover:bg-indigo-50');
+      }
+
+      // إظهار/إخفاء الأقسام
       sectionPrayer.classList.toggle('active', isPrayer);
       sectionDhikr.classList.toggle('active', !isPrayer);
-
-      // manage "required" only for visible section if needed (we use selects with defaults, so not required)
-      // but you can enforce required here if you later add empty options
     }
+
     tabPrayer.addEventListener('click', () => setActive(tabPrayer));
     tabDhikr .addEventListener('click', () => setActive(tabDhikr));
 
-    // Form submit
-    const form = document.getElementById('dailyForm');
-  const alertBox = document.getElementById('alert');
-  const submitBtn = document.getElementById('submitBtn');
-  const spinner = document.getElementById('spinner');
-  const sectionInput = document.getElementById('section');
-  const tabPrayer = document.getElementById('tabPrayer');
-  const tabDhikr  = document.getElementById('tabDhikr');
+    // إرسال النموذج
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      alertBox.classList.add('hidden');
+      submitBtn.disabled = true; spinner.classList.remove('hidden');
 
-  function showAlert(type, msg) {
-    const styles = {
-      success: 'border-green-200 bg-green-50 text-green-700',
-      error:   'border-red-200 bg-red-50 text-red-700',
-      info:    'border-blue-200 bg-blue-50 text-blue-700',
-    };
-    alertBox.className = `mb-4 rounded-xl border p-3 text-sm ${styles[type] || styles.info}`;
-    alertBox.textContent = msg;
-    alertBox.classList.remove('hidden');
-  }
+      // 1) اجمع القيم من النموذج
+      const fd = new FormData(form);
+      if (!fd.get('section')) fd.set('section', sectionInput.value || 'prayer');
+      const isPrayer = fd.get('section') === 'prayer';
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    alertBox.classList.add('hidden');
-    submitBtn.disabled = true; spinner.classList.remove('hidden');
-
-    // 1) ابدأ من FormData لالتقاط كل الحقول المسماة في النموذج
-    const fd = new FormData(form);
-
-    // 2) نضمن وجود المفتاح section دائمًا (يبقى "prayer" افتراضيًا)
-    if (!fd.get('section')) {
-      fd.set('section', sectionInput.value || 'prayer');
-    }
-
-    // 3) نضمن اصطفاف الأعمدة: إذا القسم صلاة، نفرّغ مفاتيح التسبيح، والعكس صحيح
-    const isPrayer = fd.get('section') === 'prayer';
-
-    if (isPrayer) {
-      // لو كانت الحقول مفقودة لأي سبب، نضبط قيمًا افتراضية/فارغة
-      fd.set('fajr',    fd.get('fajr')    ?? '');
-      fd.set('dhuhr',   fd.get('dhuhr')   ?? '');
-      fd.set('asr',     fd.get('asr')     ?? '');
-      fd.set('maghrib', fd.get('maghrib') ?? '');
-      fd.set('isha',    fd.get('isha')    ?? '');
-      fd.set('sunnah12', fd.get('sunnah12') ?? ''); 
-      fd.set('duha',     fd.get('duha')     ?? '');
-      fd.set('witr',     fd.get('witr')     ?? '');
-
-      // نفرّغ مجموعة التسبيح
-      fd.set('salawat500',   '');
-      fd.set('tasbih100',    '');
-      fd.set('istighfar500', '');
-    } else {
-      // نفرّغ مجموعة الصلاة
-      fd.set('fajr',''); fd.set('dhuhr',''); fd.set('asr',''); fd.set('maghrib',''); fd.set('isha','');
-      fd.set('sunnah12',''); fd.set('duha',''); fd.set('witr','');
-
-      // نضمن مفاتيح التسبيح
-      fd.set('salawat500',   fd.get('salawat500')   ?? '');
-      fd.set('tasbih100',    fd.get('tasbih100')    ?? '');
-      fd.set('istighfar500', fd.get('istighfar500') ?? '');
-    }
-
-    // 4) تحويل آمن إلى URLSearchParams (مضمون مع Apps Script)
-    const params = new URLSearchParams();
-    for (const [k, v] of fd.entries()) {
-      params.append(k, v ?? '');
-    }
-
-    // فحص قبل الإرسال – لتتأكد بنفسك أن section والحقول موجودة:
-    console.log('PAYLOAD', Object.fromEntries(params));
-
-    try {
-      const res = await fetch(WEB_APP_URL, {
-        method: 'POST',
-        body: params,     // لا تضف headers حتى لا تطلق Preflight
-        mode: 'cors',
-        redirect: 'follow',
-        credentials: 'omit'
-      });
-      const raw = await res.text();
-      let json = null; try { json = JSON.parse(raw); } catch (_) {}
-
-      console.log('STATUS=', res.status, 'RAW=', raw);
-      if (res.ok && (!json || json.result === 'success')) {
-        showAlert('success', 'تم الإرسال بنجاح ✅');
-        form.reset();
-        // إعادة التبويب افتراضيًا إلى الصلاة + إعادة قيمة section
-        tabPrayer.click();   // هذا يستدعي setActive ويضبط hidden input
+      if (isPrayer) {
+        // قيم الصلاة + السنن (مع ضمان المفاتيح)
+        fd.set('fajr',     fd.get('fajr')     ?? '');
+        fd.set('dhuhr',    fd.get('dhuhr')    ?? '');
+        fd.set('asr',      fd.get('asr')      ?? '');
+        fd.set('maghrib',  fd.get('maghrib')  ?? '');
+        fd.set('isha',     fd.get('isha')     ?? '');
+        fd.set('sunnah12', fd.get('sunnah12') ?? '');
+        fd.set('duha',     fd.get('duha')     ?? '');
+        fd.set('witr',     fd.get('witr')     ?? '');
+        // تفريغ التسبيح
+        fd.set('salawat500',   '');
+        fd.set('tasbih100',    '');
+        fd.set('istighfar500', '');
       } else {
-        const message = (json && (json.error || json.message)) || raw || ('HTTP ' + res.status);
-        showAlert('error', 'تعذّر الإرسال: ' + message);
+        // تفريغ الصلاة
+        fd.set('fajr',''); fd.set('dhuhr',''); fd.set('asr',''); fd.set('maghrib',''); fd.set('isha','');
+        fd.set('sunnah12',''); fd.set('duha',''); fd.set('witr','');
+        // مفاتيح التسبيح
+        fd.set('salawat500',   fd.get('salawat500')   ?? '');
+        fd.set('tasbih100',    fd.get('tasbih100')    ?? '');
+        fd.set('istighfar500', fd.get('istighfar500') ?? '');
       }
-    } catch (err) {
-      showAlert('error', 'خطأ في الاتصال بالخادم: ' + err.message);
-    } finally {
-      submitBtn.disabled = false; spinner.classList.add('hidden');
-    }
-  });
+
+      // 2) حوّلها إلى URLSearchParams (طلب بسيط بلا Preflight)
+      const params = new URLSearchParams();
+      for (const [k,v] of fd.entries()) params.append(k, v ?? '');
+
+      // (اختياري) راقب الحمولة
+      console.log('PAYLOAD', Object.fromEntries(params));
+
+      try {
+        const res = await fetch(WEB_APP_URL, {
+          method: 'POST',
+          body: params,
+          mode: 'cors',
+          redirect: 'follow',
+          credentials: 'omit',
+        });
+
+        const raw = await res.text();
+        let json = null; try { json = JSON.parse(raw); } catch {}
+
+        console.log('STATUS=', res.status, 'RAW=', raw);
+        if (res.ok && (!json || json.result === 'success')) {
+          showAlert('success', 'تم الإرسال بنجاح ✅');
+          form.reset();
+          // العودة افتراضيًا لقسم الصلاة
+          setActive(tabPrayer);
+        } else {
+          const message = (json && (json.error || json.message)) || raw || ('HTTP ' + res.status);
+          showAlert('error', 'تعذّر الإرسال: ' + message);
+        }
+      } catch (err) {
+        showAlert('error', 'خطأ في الاتصال بالخادم: ' + err.message);
+      } finally {
+        submitBtn.disabled = false; spinner.classList.add('hidden');
+      }
+    });
+
+    // تهيئة أولية (تأكيد المظهر)
+    setActive(tabPrayer);
   </script>
 </body>
 </html>
