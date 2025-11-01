@@ -3,111 +3,170 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>تسجيل الصلاة اليومية | مسجدنا</title>
-  <meta name="description" content=" نموذج تسجيل الصلاة اليومية لطلاب مسجد الامام  الشافعي">
+  <title>تسجيل الأعمال اليومية | مسجدنا</title>
+  <meta name="description" content="نموذج تسجيل الصلاة أو التسبيح لطالبات مسجد الإمام الشافعي">
   <link rel="icon" href="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f54c.svg">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* خلفية لطيفة بتدرّج */
     body {
       background: radial-gradient(1200px 600px at 80% -10%, #eef2ff 10%, transparent 40%),
                   radial-gradient(1000px 500px at -10% 120%, #ecfeff 10%, transparent 40%),
                   #f8fafc;
     }
+    .tab-active { @apply bg-indigo-600 text-white; }
+    .tab { @apply px-4 py-2 rounded-xl text-sm font-medium border border-indigo-200 bg-white text-indigo-700 hover:bg-indigo-50 transition; }
+    .section { display: none; }
+    .section.active { display: block; }
   </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
 
-  <main class="w-full max-w-xl">
-    <!-- بطاقة -->
+  <main class="w-full max-w-2xl">
     <div class="relative bg-white/90 backdrop-blur shadow-2xl rounded-3xl p-6 sm:p-8 border border-gray-100">
-      <!-- رأس -->
+      <!-- Header -->
       <div class="flex items-center gap-4 mb-6">
-       <img src="m.jpg" alt="شعار المسجد" class="w-16 h-16">
-
-
-
+        <img src="m.jpg" alt="شعار المسجد" class="w-16 h-16 rounded-xl object-cover">
         <div>
-          <h1 class="text-2xl font-extrabold text-indigo-800">تسجيل الصلاة اليومية لطالبات مسجد الشافعي</h1>
+          <h1 class="text-2xl font-extrabold text-indigo-800">تسجيل الأعمال اليومية لطالبات مسجد الشافعي</h1>
           <p class="text-sm text-gray-500">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيمِ</p>
         </div>
       </div>
 
-      <!-- تنبيه نجاح/فشل -->
+      <!-- Tabs -->
+      <div class="mb-5 flex gap-2">
+        <button type="button" id="tabPrayer" class="tab tab-active" data-target="prayer">قسم الصلاة</button>
+        <button type="button" id="tabDhikr"  class="tab" data-target="dhikr">قسم التسبيح</button>
+      </div>
+
+      <!-- Alert -->
       <div id="alert" class="hidden mb-4 rounded-xl border p-3 text-sm"></div>
 
-      <!-- النموذج -->
-      <form id="prayerForm" class="space-y-5">
-        <!-- الاسم -->
+      <!-- Form -->
+      <form id="dailyForm" class="space-y-5">
+        <!-- common -->
+        <input type="hidden" id="section" name="section" value="prayer" />
         <div>
           <label for="name" class="block mb-2 text-gray-700 font-medium">الاسم الكامل <span class="text-red-500">*</span></label>
-          <input
-            id="name" name="name" required
+          <input id="name" name="name" required
             class="w-full border border-gray-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            placeholder="أدخل اسمك الثلاثي"
-            autocomplete="name"
-          />
+            placeholder="أدخل اسمك الثلاثي" autocomplete="name" />
         </div>
 
-        <!-- الصلوات -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label for="fajr" class="block mb-1 text-gray-700">الفجر</label>
-            <select id="fajr" name="fajr" class="w-full border border-gray-200 rounded-xl p-2.5" required>
-              <option value="حاضر_مع_سنة">حاضر مع سنة</option>
-              <option value="حاضر_بدون_سنة">حاضر بدون سنة</option>
-              <option value="قضاء">قضاء</option>
-              <option value="لم_يصل">لم يصلّ</option>
-            </select>
+        <!-- PRAYER SECTION -->
+        <section id="section-prayer" class="section active space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- فرض -->
+            <div>
+              <label for="fajr" class="block mb-1 text-gray-700">الفجر</label>
+              <select id="fajr" name="fajr" class="w-full border border-gray-200 rounded-xl p-2.5">
+                <option value="حاضر_مع_سنة">حاضر مع سنة</option>
+                <option value="حاضر_بدون_سنة">حاضر بدون سنة</option>
+                <option value="قضاء">قضاء</option>
+                <option value="لم_يصل">لم يصلّ</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="dhuhr" class="block mb-1 text-gray-700">الظهر</label>
+              <select id="dhuhr" name="dhuhr" class="w-full border border-gray-200 rounded-xl p-2.5">
+                <option value="حاضر_مع_سنة">حاضر مع سنة</option>
+                <option value="حاضر_بدون_سنة">حاضر بدون سنة</option>
+                <option value="قضاء">قضاء</option>
+                <option value="لم_يصل">لم يصلّ</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="asr" class="block mb-1 text-gray-700">العصر</label>
+              <select id="asr" name="asr" class="w-full border border-gray-200 rounded-xl p-2.5">
+                <option value="حاضر_مع_سنة">حاضر مع سنة</option>
+                <option value="حاضر_بدون_سنة">حاضر بدون سنة</option>
+                <option value="قضاء">قضاء</option>
+                <option value="لم_يصل">لم يصلّ</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="maghrib" class="block mb-1 text-gray-700">المغرب</label>
+              <select id="maghrib" name="maghrib" class="w-full border border-gray-200 rounded-xl p-2.5">
+                <option value="حاضر_مع_سنة">حاضر مع سنة</option>
+                <option value="حاضر_بدون_سنة">حاضر بدون سنة</option>
+                <option value="قضاء">قضاء</option>
+                <option value="لم_يصل">لم يصلّ</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="isha" class="block mb-1 text-gray-700">العشاء</label>
+              <select id="isha" name="isha" class="w-full border border-gray-200 rounded-xl p-2.5">
+                <option value="حاضر_مع_سنة">حاضر مع سنة</option>
+                <option value="حاضر_بدون_سنة">حاضر بدون سنة</option>
+                <option value="قضاء">قضاء</option>
+                <option value="لم_يصل">لم يصلّ</option>
+              </select>
+            </div>
           </div>
 
-          <div>
-            <label for="dhuhr" class="block mb-1 text-gray-700">الظهر</label>
-            <select id="dhuhr" name="dhuhr" class="w-full border border-gray-200 rounded-xl p-2.5" required>
-              <option value="حاضر_مع_سنة">حاضر مع سنة</option>
-              <option value="حاضر_بدون_سنة">حاضر بدون سنة</option>
-              <option value="قضاء">قضاء</option>
-              <option value="لم_يصل">لم يصلّ</option>
-            </select>
-          </div>
+          <!-- البنود الثنائية -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label for="sunnah12" class="block mb-1 text-gray-700">سنن الرواتب (12 ركعة)</label>
+              <select id="sunnah12" name="sunnah12" class="w-full border border-gray-200 rounded-xl p-2.5">
+                <option value="تم">تم</option>
+                <option value="لم_يتم">لم يتم</option>
+              </select>
+            </div>
 
-          <div>
-            <label for="asr" class="block mb-1 text-gray-700">العصر</label>
-            <select id="asr" name="asr" class="w-full border border-gray-200 rounded-xl p-2.5" required>
-              <option value="حاضر_مع_سنة">حاضر مع سنة</option>
-              <option value="حاضر_بدون_سنة">حاضر بدون سنة</option>
-              <option value="قضاء">قضاء</option>
-              <option value="لم_يصل">لم يصلّ</option>
-            </select>
-          </div>
+            <div>
+              <label for="duha" class="block mb-1 text-gray-700">صلاة الضحى</label>
+              <select id="duha" name="duha" class="w-full border border-gray-200 rounded-xl p-2.5">
+                <option value="تم">تم</option>
+                <option value="لم_يتم">لم يتم</option>
+              </select>
+            </div>
 
-          <div>
-            <label for="maghrib" class="block mb-1 text-gray-700">المغرب</label>
-            <select id="maghrib" name="maghrib" class="w-full border border-gray-200 rounded-xl p-2.5" required>
-              <option value="حاضر_مع_سنة">حاضر مع سنة</option>
-              <option value="حاضر_بدون_سنة">حاضر بدون سنة</option>
-              <option value="قضاء">قضاء</option>
-              <option value="لم_يصل">لم يصلّ</option>
-            </select>
+            <div>
+              <label for="witr" class="block mb-1 text-gray-700">صلاة الوتر</label>
+              <select id="witr" name="witr" class="w-full border border-gray-200 rounded-xl p-2.5">
+                <option value="تم">تم</option>
+                <option value="لم_يتم">لم يتم</option>
+              </select>
+            </div>
           </div>
+        </section>
 
-          <div>
-            <label for="isha" class="block mb-1 text-gray-700">العشاء</label>
-            <select id="isha" name="isha" class="w-full border border-gray-200 rounded-xl p-2.5" required>
-              <option value="حاضر_مع_سنة">حاضر مع سنة</option>
-              <option value="حاضر_بدون_سنة">حاضر بدون سنة</option>
-              <option value="قضاء">قضاء</option>
-              <option value="لم_يصل">لم يصلّ</option>
-            </select>
+        <!-- DHIKR SECTION -->
+        <section id="section-dhikr" class="section space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label for="salawat500" class="block mb-1 text-gray-700">500 صلاة على النبي ﷺ</label>
+              <select id="salawat500" name="salawat500" class="w-full border border-gray-200 rounded-xl p-2.5">
+                <option value="تم">تم</option>
+                <option value="لم_يتم">لم يتم</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="tasbih100" class="block mb-1 text-gray-700">100 تسبيح</label>
+              <select id="tasbih100" name="tasbih100" class="w-full border border-gray-200 rounded-xl p-2.5">
+                <option value="تم">تم</option>
+                <option value="لم_يتم">لم يتم</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="istighfar500" class="block mb-1 text-gray-700">500 استغفار</label>
+              <select id="istighfar500" name="istighfar500" class="w-full border border-gray-200 rounded-xl p-2.5">
+                <option value="تم">تم</option>
+                <option value="لم_يتم">لم يتم</option>
+              </select>
+            </div>
           </div>
-        </div>
+        </section>
 
-        <!-- إجراء -->
-        <button
-          id="submitBtn"
-          type="submit"
-          class="w-full inline-flex items-center justify-center gap-2 bg-indigo-600 text-white py-3 rounded-2xl hover:bg-indigo-700 transition disabled:opacity-60 disabled:cursor-not-allowed"
-        >
+        <!-- Submit -->
+        <button id="submitBtn" type="submit"
+          class="w-full inline-flex items-center justify-center gap-2 bg-indigo-600 text-white py-3 rounded-2xl hover:bg-indigo-700 transition disabled:opacity-60 disabled:cursor-not-allowed">
           <svg id="spinner" class="hidden animate-spin h-5 w-5" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4A4 4 0 008 12H4z"></path>
@@ -115,34 +174,55 @@
           <span>إرسال</span>
         </button>
 
-        <!-- ملاحظة خصوصية -->
         <p class="text-xs text-gray-500 text-center">
           تُستخدم هذه البيانات لأغراض تربوية داخلية في المسجد فقط.
         </p>
       </form>
     </div>
 
-    <!-- تذييل بسيط -->
-    <p class="text-center text-xs text-gray-400 mt-4">
-      مشروع المسجد — بإشراف الإدارة التعليمية
-    </p>
+    <p class="text-center text-xs text-gray-400 mt-4">مشروع المسجد — بإشراف الإدارة التعليمية</p>
   </main>
 
   <script>
-    // ضع هنا رابط الويب آب المنشور الذي ينتهي بـ /exec
+    // ضع هنا رابط الويب آب الذي ينتهي بـ /exec
     const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzSeTMCTiRZJePjOB1E4ylvfolssBvcu-YiTPmnSHxzm40xEtYdJQtVVggY3Alvz_pEbQ/exec';
 
-    const form = document.getElementById('prayerForm');
+    // Tabs logic
+    const tabPrayer = document.getElementById('tabPrayer');
+    const tabDhikr  = document.getElementById('tabDhikr');
+    const sectionInput = document.getElementById('section');
+    const sectionPrayer = document.getElementById('section-prayer');
+    const sectionDhikr  = document.getElementById('section-dhikr');
+
+    function setActive(tab) {
+      const isPrayer = tab.dataset.target === 'prayer';
+      sectionInput.value = isPrayer ? 'prayer' : 'dhikr';
+
+      // tabs UI
+      tabPrayer.classList.toggle('tab-active', isPrayer);
+      tabDhikr.classList.toggle('tab-active', !isPrayer);
+
+      // sections
+      sectionPrayer.classList.toggle('active', isPrayer);
+      sectionDhikr.classList.toggle('active', !isPrayer);
+
+      // manage "required" only for visible section if needed (we use selects with defaults, so not required)
+      // but you can enforce required here if you later add empty options
+    }
+    tabPrayer.addEventListener('click', () => setActive(tabPrayer));
+    tabDhikr .addEventListener('click', () => setActive(tabDhikr));
+
+    // Form submit
+    const form = document.getElementById('dailyForm');
     const alertBox = document.getElementById('alert');
     const submitBtn = document.getElementById('submitBtn');
     const spinner = document.getElementById('spinner');
 
     function showAlert(type, msg) {
-      // type: 'success' | 'error' | 'info'
       const styles = {
         success: 'border-green-200 bg-green-50 text-green-700',
-        error: 'border-red-200 bg-red-50 text-red-700',
-        info: 'border-blue-200 bg-blue-50 text-blue-700',
+        error:   'border-red-200 bg-red-50 text-red-700',
+        info:    'border-blue-200 bg-blue-50 text-blue-700',
       };
       alertBox.className = `mb-4 rounded-xl border p-3 text-sm ${styles[type] || styles.info}`;
       alertBox.textContent = msg;
@@ -154,33 +234,56 @@
       alertBox.classList.add('hidden');
       submitBtn.disabled = true; spinner.classList.remove('hidden');
 
-      // نجعل الطلب بسيطًا (بدون هيدرات) لتجنّب preflight
       const params = new URLSearchParams();
-      params.append('name', document.getElementById('name').value.trim());
-      params.append('fajr', document.getElementById('fajr').value);
-      params.append('dhuhr', document.getElementById('dhuhr').value);
-      params.append('asr', document.getElementById('asr').value);
-      params.append('maghrib', document.getElementById('maghrib').value);
-      params.append('isha', document.getElementById('isha').value);
+      const val = id => (document.getElementById(id)?.value || '').trim();
+
+      params.append('section', val('section'));
+      params.append('name', val('name'));
+
+      if (val('section') === 'prayer') {
+        params.append('fajr',    val('fajr'));
+        params.append('dhuhr',   val('dhuhr'));
+        params.append('asr',     val('asr'));
+        params.append('maghrib', val('maghrib'));
+        params.append('isha',    val('isha'));
+
+        params.append('sunnah12', val('sunnah12'));
+        params.append('duha',     val('duha'));
+        params.append('witr',     val('witr'));
+
+        // empty the dhikr set (to keep columns aligned)
+        params.append('salawat500',  '');
+        params.append('tasbih100',   '');
+        params.append('istighfar500','');
+      } else {
+        // empty the prayer set
+        params.append('fajr',''); params.append('dhuhr',''); params.append('asr',''); params.append('maghrib',''); params.append('isha','');
+        params.append('sunnah12',''); params.append('duha',''); params.append('witr','');
+
+        // dhikr set
+        params.append('salawat500',   val('salawat500'));
+        params.append('tasbih100',    val('tasbih100'));
+        params.append('istighfar500', val('istighfar500'));
+      }
 
       try {
         const res = await fetch(WEB_APP_URL, { method: 'POST', body: params });
-      const raw = await res.text();
-      let json = null;
-      try { json = JSON.parse(raw); } catch (_) {}
+        const raw = await res.text();
+        let json = null; try { json = JSON.parse(raw); } catch (_) {}
 
-      console.log('STATUS=', res.status, 'RAW=', raw);
-      if (res.ok && (!json || json.result === 'success')) {
+        console.log('STATUS=', res.status, 'RAW=', raw);
+        if (res.ok && (!json || json.result === 'success')) {
           showAlert('success', 'تم الإرسال بنجاح ✅');
           form.reset();
+          // العودة افتراضياً إلى قسم الصلاة
+          setActive(tabPrayer);
         } else {
- const message = (json && (json.error || json.message)) || raw || ('HTTP ' + res.status);
-        showAlert('error', 'تعذّر الإرسال: ' + message);     
-      }
+          const message = (json && (json.error || json.message)) || raw || ('HTTP ' + res.status);
+          showAlert('error', 'تعذّر الإرسال: ' + message);
+        }
       } catch (err) {
         showAlert('error', 'خطأ في الاتصال بالخادم: ' + err.message);
-      } 
-      finally {
+      } finally {
         submitBtn.disabled = false; spinner.classList.add('hidden');
       }
     });
