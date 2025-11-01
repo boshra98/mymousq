@@ -214,79 +214,102 @@
 
     // Form submit
     const form = document.getElementById('dailyForm');
-    const alertBox = document.getElementById('alert');
-    const submitBtn = document.getElementById('submitBtn');
-    const spinner = document.getElementById('spinner');
+  const alertBox = document.getElementById('alert');
+  const submitBtn = document.getElementById('submitBtn');
+  const spinner = document.getElementById('spinner');
+  const sectionInput = document.getElementById('section');
+  const tabPrayer = document.getElementById('tabPrayer');
+  const tabDhikr  = document.getElementById('tabDhikr');
 
-    function showAlert(type, msg) {
-      const styles = {
-        success: 'border-green-200 bg-green-50 text-green-700',
-        error:   'border-red-200 bg-red-50 text-red-700',
-        info:    'border-blue-200 bg-blue-50 text-blue-700',
-      };
-      alertBox.className = `mb-4 rounded-xl border p-3 text-sm ${styles[type] || styles.info}`;
-      alertBox.textContent = msg;
-      alertBox.classList.remove('hidden');
+  function showAlert(type, msg) {
+    const styles = {
+      success: 'border-green-200 bg-green-50 text-green-700',
+      error:   'border-red-200 bg-red-50 text-red-700',
+      info:    'border-blue-200 bg-blue-50 text-blue-700',
+    };
+    alertBox.className = `mb-4 rounded-xl border p-3 text-sm ${styles[type] || styles.info}`;
+    alertBox.textContent = msg;
+    alertBox.classList.remove('hidden');
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    alertBox.classList.add('hidden');
+    submitBtn.disabled = true; spinner.classList.remove('hidden');
+
+    // 1) ابدأ من FormData لالتقاط كل الحقول المسماة في النموذج
+    const fd = new FormData(form);
+
+    // 2) نضمن وجود المفتاح section دائمًا (يبقى "prayer" افتراضيًا)
+    if (!fd.get('section')) {
+      fd.set('section', sectionInput.value || 'prayer');
     }
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      alertBox.classList.add('hidden');
-      submitBtn.disabled = true; spinner.classList.remove('hidden');
+    // 3) نضمن اصطفاف الأعمدة: إذا القسم صلاة، نفرّغ مفاتيح التسبيح، والعكس صحيح
+    const isPrayer = fd.get('section') === 'prayer';
 
-      const params = new URLSearchParams();
-      const val = id => (document.getElementById(id)?.value || '').trim();
+    if (isPrayer) {
+      // لو كانت الحقول مفقودة لأي سبب، نضبط قيمًا افتراضية/فارغة
+      fd.set('fajr',    fd.get('fajr')    ?? '');
+      fd.set('dhuhr',   fd.get('dhuhr')   ?? '');
+      fd.set('asr',     fd.get('asr')     ?? '');
+      fd.set('maghrib', fd.get('maghrib') ?? '');
+      fd.set('isha',    fd.get('isha')    ?? '');
+      fd.set('sunnah12', fd.get('sunnah12') ?? ''); 
+      fd.set('duha',     fd.get('duha')     ?? '');
+      fd.set('witr',     fd.get('witr')     ?? '');
 
-      params.append('section', val('section'));
-      params.append('name', val('name'));
+      // نفرّغ مجموعة التسبيح
+      fd.set('salawat500',   '');
+      fd.set('tasbih100',    '');
+      fd.set('istighfar500', '');
+    } else {
+      // نفرّغ مجموعة الصلاة
+      fd.set('fajr',''); fd.set('dhuhr',''); fd.set('asr',''); fd.set('maghrib',''); fd.set('isha','');
+      fd.set('sunnah12',''); fd.set('duha',''); fd.set('witr','');
 
-      if (val('section') === 'prayer') {
-        params.append('fajr',    val('fajr'));
-        params.append('dhuhr',   val('dhuhr'));
-        params.append('asr',     val('asr'));
-        params.append('maghrib', val('maghrib'));
-        params.append('isha',    val('isha'));
+      // نضمن مفاتيح التسبيح
+      fd.set('salawat500',   fd.get('salawat500')   ?? '');
+      fd.set('tasbih100',    fd.get('tasbih100')    ?? '');
+      fd.set('istighfar500', fd.get('istighfar500') ?? '');
+    }
 
-        params.append('sunnah12', val('sunnah12'));
-        params.append('duha',     val('duha'));
-        params.append('witr',     val('witr'));
+    // 4) تحويل آمن إلى URLSearchParams (مضمون مع Apps Script)
+    const params = new URLSearchParams();
+    for (const [k, v] of fd.entries()) {
+      params.append(k, v ?? '');
+    }
 
-        // empty the dhikr set (to keep columns aligned)
-        params.append('salawat500',  '');
-        params.append('tasbih100',   '');
-        params.append('istighfar500','');
+    // فحص قبل الإرسال – لتتأكد بنفسك أن section والحقول موجودة:
+    console.log('PAYLOAD', Object.fromEntries(params));
+
+    try {
+      const res = await fetch(WEB_APP_URL, {
+        method: 'POST',
+        body: params,     // لا تضف headers حتى لا تطلق Preflight
+        mode: 'cors',
+        redirect: 'follow',
+        credentials: 'omit'
+      });
+      const raw = await res.text();
+      let json = null; try { json = JSON.parse(raw); } catch (_) {}
+
+      console.log('STATUS=', res.status, 'RAW=', raw);
+      if (res.ok && (!json || json.result === 'success')) {
+        showAlert('success', 'تم الإرسال بنجاح ✅');
+        form.reset();
+        // إعادة التبويب افتراضيًا إلى الصلاة + إعادة قيمة section
+        tabPrayer.click();   // هذا يستدعي setActive ويضبط hidden input
       } else {
-        // empty the prayer set
-        params.append('fajr',''); params.append('dhuhr',''); params.append('asr',''); params.append('maghrib',''); params.append('isha','');
-        params.append('sunnah12',''); params.append('duha',''); params.append('witr','');
-
-        // dhikr set
-        params.append('salawat500',   val('salawat500'));
-        params.append('tasbih100',    val('tasbih100'));
-        params.append('istighfar500', val('istighfar500'));
+        const message = (json && (json.error || json.message)) || raw || ('HTTP ' + res.status);
+        showAlert('error', 'تعذّر الإرسال: ' + message);
       }
-
-      try {
-        const res = await fetch(WEB_APP_URL, { method: 'POST', body: params });
-        const raw = await res.text();
-        let json = null; try { json = JSON.parse(raw); } catch (_) {}
-
-        console.log('STATUS=', res.status, 'RAW=', raw);
-        if (res.ok && (!json || json.result === 'success')) {
-          showAlert('success', 'تم الإرسال بنجاح ✅');
-          form.reset();
-          // العودة افتراضياً إلى قسم الصلاة
-          setActive(tabPrayer);
-        } else {
-          const message = (json && (json.error || json.message)) || raw || ('HTTP ' + res.status);
-          showAlert('error', 'تعذّر الإرسال: ' + message);
-        }
-      } catch (err) {
-        showAlert('error', 'خطأ في الاتصال بالخادم: ' + err.message);
-      } finally {
-        submitBtn.disabled = false; spinner.classList.add('hidden');
-      }
-    });
+    } catch (err) {
+      showAlert('error', 'خطأ في الاتصال بالخادم: ' + err.message);
+    } finally {
+      submitBtn.disabled = false; spinner.classList.add('hidden');
+    }
+  });
   </script>
 </body>
 </html>
