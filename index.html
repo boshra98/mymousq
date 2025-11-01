@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>تسجيل الصلاة اليومية | مسجدنا</title>
-  <meta name="description" content="نموذج تسجيل الصلاة اليومية لطلاب المسجد.">
+  <meta name="description" content=" نموذج تسجيل الصلاة اليومية لطلاب مسجد الشافعي">
   <link rel="icon" href="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f54c.svg">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -182,10 +182,12 @@
           form.reset();
         } else {
  const message = (json && (json.error || json.message)) || raw || ('HTTP ' + res.status);
-        showAlert('error', 'تعذّر الإرسال: ' + message);        }
+        showAlert('error', 'تعذّر الإرسال: ' + message);     
+      }
       } catch (err) {
         showAlert('error', 'خطأ في الاتصال بالخادم: ' + err.message);
-      } finally {
+      } 
+      finally {
         submitBtn.disabled = false; spinner.classList.add('hidden');
       }
     });
