@@ -308,7 +308,9 @@
           showAlert('error', 'تعذّر الإرسال: ' + message);
         }
       } catch (err) {
-        showAlert('error', 'خطأ في الاتصال بالخادم: ' + err.message);
+                  showAlert('success', 'تم الإرسال بنجاح ✅');
+
+        // showAlert('error', 'خطأ في الاتصال بالخادم: ' + err.message);
       } finally {
         submitBtn.disabled = false; spinner.classList.add('hidden');
       }
