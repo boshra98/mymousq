@@ -50,88 +50,68 @@
         <input type="hidden" id="section" name="section" value="prayer" />
 
         <div>
-          <label for="name" class="block mb-2 text-gray-700 font-medium">الاسم الكامل <span class="text-red-500">*</span></label>
-          <input id="name" name="name" required
-            class="w-full border border-gray-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            placeholder="أدخل اسمك الثلاثي" autocomplete="name" />
-        </div>
+  <label for="name" class="block mb-2 text-gray-700 font-medium">
+    الاسم الكامل <span class="text-red-500">*</span>
+  </label>
+  <input id="name" name="name" required
+         class="w-full border border-gray-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+         placeholder="أدخل اسمك الثلاثي" autocomplete="name" />
+</div>
 
-        <!-- PRAYER SECTION -->
-        <section id="section-prayer" class="section active space-y-4">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label for="fajr" class="block mb-1 text-gray-700">الفجر</label>
-              <select id="fajr" name="fajr" class="w-full border border-gray-200 rounded-xl p-2.5">
-                <option value="حاضر_مع_سنة">حاضر مع سنة</option>
-                <option value="حاضر_بدون_سنة">حاضر بدون سنة</option>
-                <option value="قضاء">قضاء</option>
-              </select>
-            </div>
+<div>
+  <label for="day" class="block mb-2 text-gray-700 font-medium">
+    برنامج يوم <span class="text-red-500">*</span>
+  </label>
+  <select id="day" name="day" required class="w-full border border-gray-200 rounded-xl p-2.5">
+    <option value="السبت">السبت</option>
+    <option value="الاحد">الأحد</option>
+    <option value="الاثنين">الاثنين</option>
+    <option value="الثلاثاء">الثلاثاء</option>
+    <option value="الاربعاء">الأربعاء</option>
+    <option value="الخميس">الخميس</option>
+    <option value="الجمعة">الجمعة</option>
+  </select>
+</div>
 
-            <div>
-              <label for="dhuhr" class="block mb-1 text-gray-700">الظهر</label>
-              <select id="dhuhr" name="dhuhr" class="w-full border border-gray-200 rounded-xl p-2.5">
-                <option value="حاضر_مع_سنة">حاضر مع سنة</option>
-                <option value="حاضر_بدون_سنة">حاضر بدون سنة</option>
-                <option value="قضاء">قضاء</option>
-              </select>
-            </div>
+<!-- PRAYER SECTION -->
+<section id="section-prayer" class="section active space-y-4">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div>
+      <label for="fard" class="block mb-1 text-gray-700">الفرائض</label>
+      <select id="fard" name="fard"  required class="w-full border border-gray-200 rounded-xl p-2.5">
+        <option value="حاضر">حاضر</option>
+      </select>
+    </div>
+  </div>
 
-            <div>
-              <label for="asr" class="block mb-1 text-gray-700">العصر</label>
-              <select id="asr" name="asr" class="w-full border border-gray-200 rounded-xl p-2.5">
-                <option value="حاضر_مع_سنة">حاضر مع سنة</option>
-                <option value="حاضر_بدون_سنة">حاضر بدون سنة</option>
-                <option value="قضاء">قضاء</option>
-              </select>
-            </div>
+  <!-- البنود الثنائية -->
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div>
+      <label for="sunnah12" class="block mb-1 text-gray-700">سنن الرواتب (12 ركعة)</label>
+      <select id="sunnah12" name="sunnah12" class="w-full border border-gray-200 rounded-xl p-2.5">
+        <option value="تم">تم 12 ركعة</option>
+        <option value="اقل">أقل</option>
+      </select>
+    </div>
 
-            <div>
-              <label for="maghrib" class="block mb-1 text-gray-700">المغرب</label>
-              <select id="maghrib" name="maghrib" class="w-full border border-gray-200 rounded-xl p-2.5">
-                <option value="حاضر_مع_سنة">حاضر مع سنة</option>
-                <option value="حاضر_بدون_سنة">حاضر بدون سنة</option>
-                <option value="قضاء">قضاء</option>
-              </select>
-            </div>
+    <div>
+      <label for="duha" class="block mb-1 text-gray-700">صلاة الضحى</label>
+      <select id="duha" name="duha" class="w-full border border-gray-200 rounded-xl p-2.5">
+        <option value="تم">بفضل الله نعم</option>
+        <option value="لم_يتم">لا</option>
+      </select>
+    </div>
 
-            <div>
-              <label for="isha" class="block mb-1 text-gray-700">العشاء</label>
-              <select id="isha" name="isha" class="w-full border border-gray-200 rounded-xl p-2.5">
-                <option value="حاضر_مع_سنة">حاضر مع سنة</option>
-                <option value="حاضر_بدون_سنة">حاضر بدون سنة</option>
-                <option value="قضاء">قضاء</option>
-              </select>
-            </div>
-          </div>
+    <div>
+      <label for="witr" class="block mb-1 text-gray-700">صلاة الوتر</label>
+      <select id="witr" name="witr" class="w-full border border-gray-200 rounded-xl p-2.5">
+        <option value="تم">بفضل الله نعم</option>
+        <option value="لم_يتم">لا</option>
+      </select>
+    </div>
+  </div>
+</section>
 
-          <!-- البنود الثنائية -->
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div>
-              <label for="sunnah12" class="block mb-1 text-gray-700">سنن الرواتب (12 ركعة)</label>
-              <select id="sunnah12" name="sunnah12" class="w-full border border-gray-200 rounded-xl p-2.5">
-                <option value="تم">تم</option>
-                <option value="لم_يتم">لم يتم</option>
-              </select>
-            </div>
-
-            <div>
-              <label for="duha" class="block mb-1 text-gray-700">صلاة الضحى</label>
-              <select id="duha" name="duha" class="w-full border border-gray-200 rounded-xl p-2.5">
-                <option value="تم">تم</option>
-                <option value="لم_يتم">لم يتم</option>
-              </select>
-            </div>
-
-            <div>
-              <label for="witr" class="block mb-1 text-gray-700">صلاة الوتر</label>
-              <select id="witr" name="witr" class="w-full border border-gray-200 rounded-xl p-2.5">
-                <option value="تم">تم</option>
-                <option value="لم_يتم">لم يتم</option>
-              </select>
-            </div>
-          </div>
-        </section>
 
         <!-- DHIKR SECTION -->
         <section id="section-dhikr" class="section space-y-4">
@@ -248,38 +228,45 @@
       const fd = new FormData(form);
       if (!fd.get('section')) fd.set('section', sectionInput.value || 'prayer');
       const isPrayer = fd.get('section') === 'prayer';
+// ثبّتي الاسم واليوم
+fd.set('name', (fd.get('name') ?? '').toString().trim());
+fd.set('day',  (fd.get('day')  ?? '').toString().trim());
+      
+     
+if (isPrayer) {
+  // وضع الصلاة المختصر: fard + السنن
+  fd.set('fard',     (fd.get('fard')     ?? '').toString().trim());
+  fd.set('sunnah12', (fd.get('sunnah12') ?? '').toString().trim());
+  fd.set('duha',     (fd.get('duha')     ?? '').toString().trim());
+  fd.set('witr',     (fd.get('witr')     ?? '').toString().trim());
 
-      if (isPrayer) {
-        // قيم الصلاة + السنن (مع ضمان المفاتيح)
-        fd.set('fajr',     fd.get('fajr')     ?? '');
-        fd.set('dhuhr',    fd.get('dhuhr')    ?? '');
-        fd.set('asr',      fd.get('asr')      ?? '');
-        fd.set('maghrib',  fd.get('maghrib')  ?? '');
-        fd.set('isha',     fd.get('isha')     ?? '');
-        fd.set('sunnah12', fd.get('sunnah12') ?? '');
-        fd.set('duha',     fd.get('duha')     ?? '');
-        fd.set('witr',     fd.get('witr')     ?? '');
-        // تفريغ التسبيح
-        fd.set('salawat500',   '');
-        fd.set('tasbih100',    '');
-        fd.set('istighfar500', '');
-      } else {
-        // تفريغ الصلاة
-        fd.set('fajr',''); fd.set('dhuhr',''); fd.set('asr',''); fd.set('maghrib',''); fd.set('isha','');
-        fd.set('sunnah12',''); fd.set('duha',''); fd.set('witr','');
-        // مفاتيح التسبيح
-        fd.set('salawat500',   fd.get('salawat500')   ?? '');
-        fd.set('tasbih100',    fd.get('tasbih100')    ?? '');
-        fd.set('istighfar500', fd.get('istighfar500') ?? '');
-      }
+  // أفرغي حقول التسبيح
+  fd.set('salawat500',   '');
+  fd.set('tasbih100',    '');
+  fd.set('istighfar500', '');
 
-      // 2) حوّلها إلى URLSearchParams (طلب بسيط بلا Preflight)
-      const params = new URLSearchParams();
-      for (const [k,v] of fd.entries()) params.append(k, v ?? '');
+  // أفرغي الخمس فروض القديمة (احتياط لو كانت موجودة بالDOM)
+  fd.set('fajr',''); fd.set('dhuhr',''); fd.set('asr',''); fd.set('maghrib',''); fd.set('isha','');
 
-      // (اختياري) راقب الحمولة
-      console.log('PAYLOAD', Object.fromEntries(params));
+} else {
+  // وضع التسبيح
+  fd.set('salawat500',   (fd.get('salawat500')   ?? '').toString().trim());
+  fd.set('tasbih100',    (fd.get('tasbih100')    ?? '').toString().trim());
+  fd.set('istighfar500', (fd.get('istighfar500') ?? '').toString().trim());
 
+  // أفرغي حقول الصلاة
+  fd.set('fard','');
+  fd.set('sunnah12',''); fd.set('duha',''); fd.set('witr','');
+  fd.set('fajr',''); fd.set('dhuhr',''); fd.set('asr',''); fd.set('maghrib',''); fd.set('isha','');
+}
+
+// 2) حوّلي إلى URLSearchParams (طلب بسيط بلا Preflight)
+const params = new URLSearchParams();
+for (const [k, v] of fd.entries()) params.append(k, v ?? '');
+
+// (اختياري) راقبي الحمولة
+console.log('PAYLOAD', Object.fromEntries(params));
+      
       try {
         const res = await fetch(WEB_APP_URL, {
           method: 'POST',
